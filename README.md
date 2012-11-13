@@ -1,4 +1,0 @@
-RowanDirectionSystem
-====================
-
-A command-line-esque Java tool for finding psuedo-directions within an uploaded map with the default map being a modified version of Rowan University.
