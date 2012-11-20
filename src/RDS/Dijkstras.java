@@ -42,7 +42,8 @@ public class Dijkstras {
         //By default all buildings minDistance is infinity so we need to set
         //the current_loc building's minDistance to 0 so it will NEVER have a
         //prev set to it (if it did, it would no longer be the source).
-        current_loc.minDistance = 0;
+        //***********current_loc.minDistance = 0;
+        current_loc.setMinDistance(0);
 
         //PriorityQueue is a queue that automatically orders itself based on
         //the compareTo() method in the Building class (in this case minDistance)
@@ -61,24 +62,24 @@ public class Dijkstras {
             Building cur = buildingQueue.poll();    //cur is now the building @ beginning of queue
 
             //Now we must check all the edges on this building (cur)
-            for (Edge e : cur.adjacencies) {
-                Building nxt = e.target;      //the building this edge points to
-                double weight = e.weight;     //the weight of this edge
+            for (Edge e : cur.getAdjacencies()) {
+                Building nxt = e.getTarget();      //the building this edge points to
+                double weight = e.getWeight();     //the weight of this edge
 
                 //Now that we have an edge and that edge's weight, we need to see
                 //if this edge is the best (shortest) option in relation to nxt
-                double curToNxt = cur.minDistance + weight;
+                double curToNxt = cur.getMinDistance() + weight;
                 //If curToNxt is less than nxt's current minDistance then
                 //the distance between cur and nxt is now the new minimum and
                 //the current route to get to nxt is the new 'correct' route.
                 //nxt is now a valid node to check so we must add it to the queue.
-                if (curToNxt < nxt.minDistance) {
+                if (curToNxt < nxt.getMinDistance()) {
                     //Remove nxt from the queue IF it is there, if not it do nothing
                     buildingQueue.remove(nxt);
                     //nxt's minDistance will now be the distance between itself and cur
-                    nxt.minDistance = curToNxt;
+                    nxt.setMinDistance(curToNxt);
                     //nxt's previous building is now cur. cur and nxt are now fully connected.
-                    nxt.previous = cur;
+                    nxt.setPrevious(cur);
                     //We now add nxt to the queue so we can analyze it's adjacencies
                     buildingQueue.add(nxt);
                 }
@@ -99,7 +100,7 @@ public class Dijkstras {
         //go backwards through each building (starting with the destination) and
         //add them to the route list at each step until we hit a null (the earlier
         //current_loc building is the ONLY building that doesn't have a 'previous'
-        for (Building cur = destination; cur != null; cur = cur.previous) {
+        for (Building cur = destination; cur != null; cur = cur.getPrevious()) {
             route.add(cur);   //add current building to the route
         }
 
@@ -117,11 +118,16 @@ public class Dijkstras {
      * 
      * @param vertices The current_loc -> destination route to print
      */
-    public static void printRoute(List<Building> vertices) {
-        for (Building v : vertices) {
-            System.out.println("Distance to " + v + ": " + v.minDistance);
-            List<Building> route = getShortestRouteTo(v);
-            System.out.println("Route: " + route);
+    public static void printRoute(List<Building> buildings) {
+        String routeInfo = "To get to " + buildings.get(0) + " first go ";
+
+        for (int i = 1; i < buildings.size(); i++)
+        {
+            routeInfo += buildings.get(i).getMinDistance() +
+                    " feet to " + buildings.get(i) + ". \nThen go ";
         }
+        routeInfo = routeInfo.substring(0, routeInfo.lastIndexOf(". \nThen go "));
+        routeInfo += ". \nYou will now arrive at your destination.";
+        System.out.println(routeInfo);
     }
 }

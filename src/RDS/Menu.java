@@ -1,5 +1,8 @@
 package RDS;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -9,11 +12,11 @@ import java.util.Scanner;
  */
 public class Menu {
 
-    private static Building[] map;
+    private static HashMap map = null;
     private static int command = -1;
     private static Scanner scanner = new Scanner(System.in);
 
-    public Menu(Building[] map) {
+    public Menu(HashMap map) {
         this.map = map;
         generateWelcome();
         intro();
@@ -22,7 +25,7 @@ public class Menu {
 
     public static void intro() {
         System.out.println("Welcome to the Rowan Direction System! "
-                + "We apologize and empathize with your lostness!");
+                + "We apologize for and empathize with your lostness!");
         System.out.println("This program allows you to get directions from building A to building B. ");
         System.out.println("These directions will include distance, direction, and "
                 + "walking time.");
@@ -30,13 +33,12 @@ public class Menu {
     }
 
     public static void options() {
-        System.out.println("To select an option, simply enter it's corresponding number. Choose wisely.");
+        System.out.println("\nTo select an option, simply enter it's corresponding number. Choose wisely.");
         System.out.println("\t1. Get Directions");
         System.out.println("\t2. View Map");
-        System.out.println("\t3. Save Map");
-        System.out.println("\t4. Load Map");
-        System.out.println("\t5. Help");
-        System.out.println("\t6. Quit\n");
+        System.out.println("\t3. Load Map");
+        System.out.println("\t4. Help");
+        System.out.println("\t5. Quit\n");
 
         //A string switch statement would work as well, but only with JDK7 and up.
         //Due to this, I am using an int switch for compatibility.
@@ -51,18 +53,14 @@ public class Menu {
                 viewMap(false);
                 break;
             case 3:
-                //save map
-                saveMap();
-                break;
-            case 4:
                 //load map
                 loadMap();
                 break;
-            case 5:
+            case 4:
                 //help
                 help();
                 break;
-            case 6:
+            case 5:
                 //quit
                 quit();
                 break;
@@ -76,11 +74,15 @@ public class Menu {
 
     public static void getDirections() {
         boolean found = false;
-
+        Iterator it = map.entrySet().iterator();
         System.out.println("Where are you currently located?");
         String loc = scanner.nextLine();
         //Get current location and complete map if it exists
-        for (Building b : map) {
+        //for (Building b : map) {
+        //for (int i = 0; i < map.size(); i++)
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            Building b = (Building) entry.getValue();
             if (b.toString().equals(loc)) {
                 Dijkstras.computeRoutes(b);
                 found = true;   //found it!
@@ -88,12 +90,11 @@ public class Menu {
         }
         if (!found) {   //Current location doesn't exist on map, report
             System.out.println("Sorry, " + loc + " is not a supported building.");
-            System.out.println("If you would like to try again, press '1'.\n" +
-                    "If you would like to view the map and try again, press '2'.\n" +
-                    "If you would like to return to the main menu, press '3'.\n");
+            System.out.println("If you would like to try again, press '1'.\n"
+                    + "If you would like to view the map and try again, press '2'.\n"
+                    + "If you would like to return to the main menu, press '3'.\n");
             loc = scanner.nextLine();
-            switch (Integer.parseInt(loc))
-            {
+            switch (Integer.parseInt(loc)) {
                 case 1:
                     getDirections();
                     break;
@@ -105,17 +106,22 @@ public class Menu {
                     options();
                     break;
                 default:
-                    System.out.println("Sorry " + loc + "is not a recognized command." +
-                            " Please try again.");
+                    System.out.println("Sorry " + loc + "is not a recognized command."
+                            + " Please try again.");
                     break;
             }
         }
         found = false;
 
+        it = map.entrySet().iterator(); //reset the iterator
         System.out.println("What is your desired location?");
         loc = scanner.nextLine();
         //Get desired location and print shortest path if it exists
-        for (Building b : map) {
+        //for (Building b : map) {
+        //for (int i = 0; i < map.size(); i++)
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            Building b = (Building) entry.getValue();
             if (b.toString().equals(loc)) {
                 Dijkstras.printRoute(Dijkstras.getShortestRouteTo(b));
                 found = true;   //found it!
@@ -131,46 +137,50 @@ public class Menu {
     }
 
     public static void viewMap(boolean inFn) {
+        Iterator it = map.entrySet().iterator();
         System.out.println("The building(s) that this map supports are:");
-        for (Building b : map)
-        {
+        //for (Building b : map)
+        //for (int i = 0; i < map.size(); i++)
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            Building b = (Building) entry.getValue();
             System.out.println("\t" + b.toString());
         }
         System.out.println();
-        if (!inFn)
-        {
+        //if we're in a function, we don't need to display the main menu again
+        if (!inFn) {
             options();  //re-display initial menu
         }
     }
 
-    public static void saveMap() {
-        System.out.println("In save.");
-        options();
-    }
-
     public static void loadMap() {
-        System.out.println("In load.");
+        System.out.println("Please enter the file path of the map you would " +
+                "like to load:\n");
+        String path = scanner.nextLine();
+        map = FileManager.loadMap(path);
         options();
     }
 
     public static void help() {
-        System.out.println("-+-+- Get Directions -+-+-");
+        System.out.println("1. Get Directions");
         System.out.println("\tThis option allows you to input your current"
-                + "location as well as a destination.");
+                + " location as well as a destination.");
         System.out.println("\tIt will calculate the shortest path between"
-                + "the two locations (if there is one) and display it.");
-        System.out.println("-+-+- View Map -+-+-");
+                + " the two locations (if there is one) and display it.");
+        System.out.println("2. View Map");
         System.out.println("\tThis option allows you to view all of the"
-                + "buildings on the current map");
-        System.out.println("-+-+- Load Map -+-+-");
+                + " buildings on the current map");
+        System.out.println("3. Load Map");
         System.out.println("\tThis option allows you to load a new map"
-                + "into the program.");
+                + " into the program.");
         System.out.println("\tThis is done through a textfile with the "
                 + "following format:");
-        System.out.println("\t\t<INSERT FORMAT HERE>");
-        System.out.println("-+-+- Help -+-+-");
+        System.out.println("\t\t<key reference> <name of building>");
+        System.out.println("\t\t#");
+        System.out.println("\t\t<from key> <to key> <distance>");
+        System.out.println("4. Help");
         System.out.println("\tThis option displays this menu.");
-        System.out.println("-+-+- Quit -+-+-");
+        System.out.println("5. Quit");
         System.out.println("\tThis option exits the program.\n");
         options();
     }

@@ -1,5 +1,8 @@
 package RDS;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *The Building class is responsible for creation of and maintaining the various
  * buildings within the provided map. Not every building is an actual building
@@ -12,12 +15,12 @@ package RDS;
  */
 public class Building implements Comparable<Building> {
 
-    public final String name;   //name of the building
-    public Edge[] adjacencies;  //list of adjacent buildings
+    private final String name;   //name of the building
+    private ArrayList<Edge> adjacencies = new ArrayList<Edge>();  //list of adjacent buildings
     //in order for the algorithm to work, each building must have a default
     //minDistance of infinity because EVERY route will be smaller than infinity.
-    public double minDistance = Double.POSITIVE_INFINITY;
-    public Building previous;   //the building before this one in the route
+    private double minDistance = Double.POSITIVE_INFINITY;
+    private Building previous;   //the building before this one in the route
 
     /**
      * Simple constructor for the Building class
@@ -27,6 +30,42 @@ public class Building implements Comparable<Building> {
     public Building(String name) {
         this.name = name;
     }
+
+    public String getName()
+    {
+        return this.name;
+    }
+
+    public double getMinDistance()
+    {
+        return this.minDistance;
+    }
+
+    public void setMinDistance(double newMinDistance)
+    {
+        this.minDistance = newMinDistance;
+    }
+
+    public List<Edge> getAdjacencies()
+    {
+        return this.adjacencies;
+    }
+
+    public void addAdjacencie(Edge e)
+    {
+        adjacencies.add(e);
+    }
+
+    public Building getPrevious()
+    {
+        return this.previous;
+    }
+
+    public void setPrevious(Building newPrev)
+    {
+        this.previous = newPrev;
+    }
+
 
     /**
      * toString() returns the name of the building as a string
