@@ -11,8 +11,8 @@ package RDS;
  */
 public class Edge {
 
-    public final Building target;   //the building this edge points to
-    public final double weight;     //the weight (numerical value) of this edge
+    private final Building target;   //the building this edge points to
+    private final double weight;     //the weight (numerical value) of this edge
 
     /**
      * Simple constructor for the Edge class
@@ -23,5 +23,20 @@ public class Edge {
     public Edge(Building target, double weight) {
         this.target = target;
         this.weight = weight;
+    }
+
+    public Building getTarget()
+    {
+        return this.target;
+    }
+
+//    public void setTarget(Building newTarget)
+//    {
+//        this.target = newTarget;
+//    }
+
+    public double getWeight()
+    {
+        return this.weight;
     }
 }
