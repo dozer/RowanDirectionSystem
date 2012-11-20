@@ -39,36 +39,41 @@ public class Menu {
         System.out.println("\t3. Load Map");
         System.out.println("\t4. Help");
         System.out.println("\t5. Quit\n");
-
-        //A string switch statement would work as well, but only with JDK7 and up.
-        //Due to this, I am using an int switch for compatibility.
-        command = Integer.parseInt(scanner.nextLine());
-        switch (command) {
-            case 1:
-                //get directions
-                getDirections();
-                break;
-            case 2:
-                //view map
-                viewMap(false);
-                break;
-            case 3:
-                //load map
-                loadMap();
-                break;
-            case 4:
-                //help
-                help();
-                break;
-            case 5:
-                //quit
-                quit();
-                break;
-            default:
-                System.out.println(command + " is not a recognized command. "
-                        + "Please try again.");
-                options();
-                break;
+        try {
+            //A string switch statement would work as well, but only with JDK7 and up.
+            //Due to this, I am using an int switch for compatibility.
+            command = Integer.parseInt(scanner.nextLine());
+            switch (command) {
+                case 1:
+                    //get directions
+                    getDirections();
+                    break;
+                case 2:
+                    //view map
+                    viewMap(false);
+                    break;
+                case 3:
+                    //load map
+                    loadMap();
+                    break;
+                case 4:
+                    //help
+                    help();
+                    break;
+                case 5:
+                    //quit
+                    quit();
+                    break;
+                default:
+                    System.out.println(command + " is not a recognized command. "
+                            + "Please try again.");
+                    options();
+                    break;
+            }
+        } catch (Exception e) {
+            System.out.println("Command not recognized.\nInput must be "
+                    + "a number between 1 and 5. Please try again.");
+            options();
         }
     }
 
@@ -154,8 +159,8 @@ public class Menu {
     }
 
     public static void loadMap() {
-        System.out.println("Please enter the file path of the map you would " +
-                "like to load:\n");
+        System.out.println("Please enter the file path of the map you would "
+                + "like to load:\n");
         String path = scanner.nextLine();
         map = FileManager.loadMap(path);
         options();
