@@ -23,6 +23,8 @@ import java.util.Collections;
  */
 public class Dijkstras {
 
+    private static final double AVG_WALKSPEED = 286;    //feet per minute
+
     /**
      * computeRoutes computes all the routes between buildings beginning with a given
      * current_loc building. It does so by analyzing the adjacent building and correctly
@@ -116,18 +118,37 @@ public class Dijkstras {
      * current_loc -> destination route) and prints the distance between each building
      * as well as the final route and its distance
      * 
-     * @param vertices The current_loc -> destination route to print
+     * @param buildings The current_loc -> destination route to print
      */
     public static void printRoute(List<Building> buildings) {
-        String routeInfo = "To get to " + buildings.get(0) + " first go ";
+        double difference = 0;
+        double total_distance = 0;
+        String routeInfo = "\nTo get to " + buildings.get(0) + " first go ";
 
-        for (int i = 1; i < buildings.size(); i++)
-        {
-            routeInfo += buildings.get(i).getMinDistance() +
-                    " feet to " + buildings.get(i) + ". \nThen go ";
+        for (int i = 1; i < buildings.size(); i++) {
+            difference = buildings.get(i - 1).getMinDistance();
+            routeInfo += (buildings.get(i).getMinDistance() - difference)
+                    + " feet to " + buildings.get(i) + ". \nThen go ";
         }
+        total_distance = buildings.get(buildings.size() - 1).getMinDistance();
         routeInfo = routeInfo.substring(0, routeInfo.lastIndexOf(". \nThen go "));
-        routeInfo += ". \nYou will now arrive at your destination.";
+        routeInfo += ". \nYou will now arrive at your destination."
+                + "\nThis trip is a total of " + total_distance
+                + " feet and will take you approximately "
+                + truncateDouble(total_distance / AVG_WALKSPEED, 2)
+                + " minutes to walk.";
         System.out.println(routeInfo);
+    }
+
+    private static double truncateDouble(double number, int numDigits) {
+        String arg = "" + number;
+        int i = arg.indexOf('.');
+        if (i != -1) {
+            if (arg.length() > i + numDigits) {
+                arg = arg.substring(0, i + numDigits + 1);
+                return Double.parseDouble(arg);
+            }
+        }
+        return number;
     }
 }
