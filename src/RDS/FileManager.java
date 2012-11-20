@@ -1,9 +1,12 @@
 package RDS;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.IOException;
+import java.io.FileWriter;
+import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  *
@@ -42,16 +45,11 @@ public class FileManager {
                     b.addAdjacencie(new Edge(map.get(to), weight));
                 }
             }
-                System.out.println("Map at " + filePath + " has been loaded successfully.\n");
-            }
-        catch  (Exception e) {
+            System.out.println("Map at " + filePath + " has been loaded successfully.\n");
+        } catch (Exception e) {
             System.out.println("There was an error reading from the file: "
                     + filePath + ".\nPlease check the file path and formatting and try again.");
         }
         return map;
-    }
-
-    public static void main(String[] args) {
-        loadMap("/home/an0maly/NetBeansProjects/RowanDirectionSystem/sample_map.txt");
     }
 }
