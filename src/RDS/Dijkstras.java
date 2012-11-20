@@ -123,7 +123,8 @@ public class Dijkstras {
     public static void printRoute(List<Building> buildings) {
         double difference = 0;
         double total_distance = 0;
-        String routeInfo = "\nTo get to " + buildings.get(0) + " first go ";
+        String routeInfo = "\nTo get to " + buildings.get(buildings.size()-1) +
+                " first go ";
 
         for (int i = 1; i < buildings.size(); i++) {
             difference = buildings.get(i - 1).getMinDistance();
