@@ -66,6 +66,18 @@ public class Building implements Comparable<Building> {
         this.previous = newPrev;
     }
 
+    public static Edge findAdj(Building b, List<Edge> adjs)
+    {
+        for (Edge e : adjs)
+        {
+            if (b == e.getTarget())
+            {
+                return e;
+            }
+        }
+        return null;
+    }
+
 
     /**
      * toString() returns the name of the building as a string
