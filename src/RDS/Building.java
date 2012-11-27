@@ -31,53 +31,75 @@ public class Building implements Comparable<Building> {
         this.name = name;
     }
 
+    /**
+     * The getName() method retrieves the name of the building.
+     *
+     * @return The name of the building.
+     */
     public String getName()
     {
         return this.name;
     }
 
+    /**
+     * The getMinDistance() method retrieves the minDistance of the building.
+     *
+     * @return The minDistance of the building.
+     */
     public double getMinDistance()
     {
         return this.minDistance;
     }
 
+    /**
+     * The setMinDistance() method sets the minDistance of the building to a new value
+     *
+     * @param newMinDistance The building's new minDistance
+     */
     public void setMinDistance(double newMinDistance)
     {
         this.minDistance = newMinDistance;
     }
 
+    /**
+     * The getAdjacencies() method retrieves all of the edges of the building
+     *
+     * @return The list of edges associated with the building
+     */
     public List<Edge> getAdjacencies()
     {
         return this.adjacencies;
     }
 
+    /**
+     * The addAdjacencie method adds an edge to the building's list of adjacencies
+     *
+     * @param e The edge to add
+     */
     public void addAdjacencie(Edge e)
     {
         adjacencies.add(e);
     }
 
+    /**
+     * The getPrevious() method retrieves the building's previous building (in the route)
+     *
+     * @return The previous building in the route.
+     */
     public Building getPrevious()
     {
         return this.previous;
     }
 
+    /**
+     * The setPrevious() method sets the building's previous building (in the route)
+     *
+     * @param newPrev The new previous building in the route.
+     */
     public void setPrevious(Building newPrev)
     {
         this.previous = newPrev;
     }
-
-    public static Edge findAdj(Building b, List<Edge> adjs)
-    {
-        for (Edge e : adjs)
-        {
-            if (b == e.getTarget())
-            {
-                return e;
-            }
-        }
-        return null;
-    }
-
 
     /**
      * toString() returns the name of the building as a string
@@ -91,8 +113,8 @@ public class Building implements Comparable<Building> {
     /**
      * compareTo determines if a given building is greater than, less than, or
      * equal to the current building. For our purposes the only pertinent data
-     * is minDistance. This satisfies the Comparable interface and allows for
-     * the use of a PriorityQueue
+     * is minDistance (walking time is based off of distance so it is moot).
+     * This satisfies the Comparable interface and allows for the use of a PriorityQueue.
      * 
      * @param that The building to compare to
      * @return the value 0 if that.minDistance is numerically equal to this.minDistance;

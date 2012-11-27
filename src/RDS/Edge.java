@@ -30,11 +30,6 @@ public class Edge {
         return this.target;
     }
 
-//    public void setTarget(Building newTarget)
-//    {
-//        this.target = newTarget;
-//    }
-
     public double getWeight()
     {
         return this.weight;
