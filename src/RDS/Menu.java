@@ -81,15 +81,15 @@ public class Menu {
         boolean found = false;
         Iterator it = map.entrySet().iterator();
         System.out.println("Where are you currently located?");
-        String loc = scanner.nextLine();
+        //toLowerCase() for ease of use
+        String loc = scanner.nextLine().toLowerCase();
         //Get current location and complete map if it exists
-        //for (Building b : map) {
-        //for (int i = 0; i < map.size(); i++)
         while (it.hasNext()) {
             Map.Entry entry = (Map.Entry) it.next();
             Building b = (Building) entry.getValue();
-            if (b.toString().equals(loc)) {
-                Dijkstras.computeRoutes(b);
+            //toLowerCase for ease of use (corresponds with getting loc above)
+            if (b.toString().toLowerCase().equals(loc)) {
+                Dijkstras.computeRoutes(b); //calculate routes
                 found = true;   //found it!
             }
         }
@@ -120,14 +120,14 @@ public class Menu {
 
         it = map.entrySet().iterator(); //reset the iterator
         System.out.println("What is your desired location?");
-        loc = scanner.nextLine();
+        //toLowerCase() for ease of use
+        loc = scanner.nextLine().toLowerCase();
         //Get desired location and print shortest path if it exists
-        //for (Building b : map) {
-        //for (int i = 0; i < map.size(); i++)
         while (it.hasNext()) {
             Map.Entry entry = (Map.Entry) it.next();
             Building b = (Building) entry.getValue();
-            if (b.toString().equals(loc)) {
+            //toLowerCase for ease of use (corresponds with getting loc above)
+            if (b.toString().toLowerCase().equals(loc)) {
                 Dijkstras.printRoute(Dijkstras.getShortestRouteTo(b));
                 found = true;   //found it!
             }
