@@ -23,7 +23,10 @@ import java.util.Collections;
  */
 public class Dijkstras {
 
-    private static final double AVG_WALKSPEED = 286;    //feet per minute
+    //This value is in feet per minute and was calculated based off of the average
+    //walking speed of adult human beings, male and female. This value is used later
+    //on to estimate walking times.
+    private static final double AVG_WALKSPEED = 286;
 
     /**
      * computeRoutes computes all the routes between buildings beginning with a given
@@ -116,40 +119,55 @@ public class Dijkstras {
     /**
      * printRoute method takes in a list of buildings (assumedly a
      * current_loc -> destination route) and prints the distance between each building
-     * as well as the final route and its distance
+     * as well as the final route, its distance, and estimated time in an easy-to-read way.
      * 
      * @param buildings The current_loc -> destination route to print
      */
     public static void printRoute(List<Building> buildings) {
-        double difference = 0;
-        double total_distance = 0;
+        double difference = 0;  //the difference between this edge and the previous one
+        double total_distance = 0;  //the total length (in feet) of the route
         String routeInfo = "\nTo get to " + buildings.get(buildings.size()-1) +
                 " first go ";
 
         for (int i = 1; i < buildings.size(); i++) {
-            difference = buildings.get(i - 1).getMinDistance();
+            difference = buildings.get(i - 1).getMinDistance(); //set difference
+            //In order to get the accurate sub-route distances we must subtract
+            //the previous minDistance
             routeInfo += (buildings.get(i).getMinDistance() - difference)
                     + " feet to " + buildings.get(i) + ". \nThen go ";
         }
+        //We are now done calculating the route, set total_distance
         total_distance = buildings.get(buildings.size() - 1).getMinDistance();
+        //In order to print the route in easy to read english we must chop off
+        //the last instance of " Then go " which was spawned while looping through
+        //all of the buildings along the path earlier.
         routeInfo = routeInfo.substring(0, routeInfo.lastIndexOf(". \nThen go "));
         routeInfo += ". \nYou will now arrive at your destination."
                 + "\nThis trip is a total of " + total_distance
                 + " feet and will take you approximately "
-                + truncateDouble(total_distance / AVG_WALKSPEED, 2)
+                + truncateDouble(total_distance / AVG_WALKSPEED, 2) //calculate time
                 + " minutes to walk.";
-        System.out.println(routeInfo);
+        System.out.println(routeInfo);  //display result
     }
 
+    /**
+     * truncateDouble is a simple, self-explanitory method that truncates a double
+     * to a specified number of decimal points in order to print the routes without
+     * having huge, ugly numbers
+     * 
+     * @param number The double to truncate
+     * @param numDigits The number of decimal digits you would like
+     * @return The truncated double
+     */
     private static double truncateDouble(double number, int numDigits) {
-        String arg = "" + number;
-        int i = arg.indexOf('.');
-        if (i != -1) {
-            if (arg.length() > i + numDigits) {
-                arg = arg.substring(0, i + numDigits + 1);
-                return Double.parseDouble(arg);
+        String arg = "" + number;   //make the number a string
+        int i = arg.indexOf('.');   //get the decimal point in the string
+        if (i != -1) {              //as long as it has a decimal point
+            if (arg.length() > i + numDigits) { //and is longer than desired amount
+                arg = arg.substring(0, i + numDigits + 1);  //0 out everything after desired decimal
+                return Double.parseDouble(arg); //parse and return newly truncated double
             }
         }
-        return number;
+        return number;  //otherwise the number is already less than the desired length
     }
 }
