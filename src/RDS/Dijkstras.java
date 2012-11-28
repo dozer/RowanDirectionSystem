@@ -10,13 +10,13 @@ import java.util.Collections;
  * algorithm related business. It is called Dijkstras because that is the algorithm
  * that is being implemented. This algorithm works with any kind of routing where
  * finding a shortest path between A and B is important. Here it is used to find
- * routes between buildings on Rowan's campus but the same algorithm could be used
- * for computer networking for example.
+ * routes between buildings on Rowan's campus (or a user-loaded map) but the same
+ * algorithm could be used in a computer networking project for example.
  *
  * The reason this algorithm works for this particular problem is because since
  * it is based on a pre-calculated map based off of the actual Rowan Campus map,
  * there will be no negative weights or cycles. If this algorithm were to be ported
- * to a different problem set, Bellman-Ford or Djikstra-Scholten or a different
+ * to a different problem set, Bellman-Ford, or Djikstra-Scholten, or a different
  * path algorithm might have to be implemented.
  *
  * @author Scott Stevenson
@@ -39,7 +39,8 @@ public class Dijkstras {
      * The loop that checks distances is essential to the algorithm because it
      * allows for the shortest route to nxt be checked FIRST. If that was not the
      * case a TON of efficiency would be lost. Removing and re-adding nxt insures
-     * that the new minDistance is taken into account when analyzing the next round.
+     * that the new minDistance is taken into account when analyzing the next round
+     * and keeps the PriorityQueue in working order.
      *
      * @param current_loc Client's current location
      */
@@ -47,7 +48,6 @@ public class Dijkstras {
         //By default all buildings minDistance is infinity so we need to set
         //the current_loc building's minDistance to 0 so it will NEVER have a
         //prev set to it (if it did, it would no longer be the source).
-        //***********current_loc.minDistance = 0;
         current_loc.setMinDistance(0);
 
         //PriorityQueue is a queue that automatically orders itself based on
@@ -110,7 +110,7 @@ public class Dijkstras {
         }
 
         //the route is currently destination -> current_loc so in order for it to make
-        //sense logically to the client we need to reverse the list so it is now
+        //sense logically to the client we need to reverse the list and make it
         //current_loc -> destination
         Collections.reverse(route);  //reverse the route
         return route;    //return the logical route
@@ -119,7 +119,8 @@ public class Dijkstras {
     /**
      * printRoute method takes in a list of buildings (assumedly a
      * current_loc -> destination route) and prints the distance between each building
-     * as well as the final route, its distance, and estimated time in an easy-to-read way.
+     * as well as the final route, its distance, and estimated walking time in
+     * an easy-to-read way.
      * 
      * @param buildings The current_loc -> destination route to print
      */
