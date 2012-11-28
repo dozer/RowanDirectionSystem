@@ -25,11 +25,21 @@ public class Edge {
         this.weight = weight;
     }
 
+    /**
+     * The getTarget() method retrieves the target building of this edge
+     *
+     * @return The target building of this edge
+     */
     public Building getTarget()
     {
         return this.target;
     }
 
+    /**
+     * The getWeight() method returns the weight (length in feet) of the edge
+     *
+     * @return The weight of the edge
+     */
     public double getWeight()
     {
         return this.weight;
