@@ -125,10 +125,9 @@ public class Dijkstras {
      * @param buildings The current_loc -> destination route to print
      */
     public static void printRoute(List<Building> buildings) {
-        System.out.println(buildings);
         if (buildings.get(0).getMinDistance() == Double.POSITIVE_INFINITY)
         {
-            System.out.println("Sorry no route");
+            System.out.println("Sorry, there is no route between these 2 buildings.");
             return;
         }
         double difference = 0;  //the difference between this edge and the previous one
