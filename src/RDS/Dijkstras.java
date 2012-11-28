@@ -148,9 +148,7 @@ public class Dijkstras {
         //In order to print the route in easy to read english we must chop off
         //the last instance of " Then go " which was spawned while looping through
         //all of the buildings along the path earlier.
-//        if (routeInfo.contains(". \nThen go ")){
         routeInfo = routeInfo.substring(0, routeInfo.lastIndexOf(". \nThen go "));
-//        }
         routeInfo += ". \nYou will now arrive at your destination."
                 + "\nThis trip is a total of " + total_distance
                 + " feet and will take you approximately "

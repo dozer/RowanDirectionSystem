@@ -18,7 +18,8 @@ import java.util.Scanner;
  */
 public class Menu {
 
-    private static boolean stillDefault = true;
+    private static boolean stillDefault = true; //whether or not the default map is loaded
+    private static String mapFilePath = null;   //file path for custom map
     private static HashMap map = null;  //the current map (Rowan is default)
     private static int command = -1;    //the current command (-1 is default)
     private static Scanner scanner = new Scanner(System.in);    //The command reader
@@ -34,6 +35,17 @@ public class Menu {
         generateWelcome();  //display eye-candy
         intro();    //display basic instructions/welcome
         options();  //display options
+    }
+
+    /**
+     * The setFP method will set the mapFilePath String variable to a new value.
+     * This method is necessary for persistance.
+     *
+     * @param fp The filepath of the new custom map
+     */
+    public static void setFP(String fp)
+    {
+        mapFilePath = fp;
     }
 
     /**
@@ -98,7 +110,7 @@ public class Menu {
     /**
      * The getDirections() method is the meat of the project. It will get the user's
      * current location, as well as their desired location, and find the shortest route
-     * between the 2 (if there is one) and display it in an easy-to-read format to stdout.
+     * between the two (if there is one) and display it in an easy-to-read format to stdout.
      */
     private static void getDirections() {
         boolean found = false;  //way to differentiate between existing/non-existing initial buildings
@@ -167,17 +179,18 @@ public class Menu {
         }
         found = false;  //Reset found to false to ensure it works in a persistant environment
         
-        //if the map is still default we can recreate it, eliminating the found paths
-        //and enabling us to get more directions
-        if (stillDefault)
+        //We now need to re-load the map because it has essentially become corrupt
+        //from the Djikstra's algorithm (certain source/destination combos will
+        //break on this step in a persistant environment.
+        if (stillDefault)   //if map is still the default Rowan map
         {
-            map = Driver.generateDefaultMap();  //re-generate the map
-            options();                          //display options again
+            map = FileManager.generateDefaultMap();  //re-generate the map
+            options();                               //display options again
         }
-        //otherwise we cannot recreate the map and must exit
-        else
+        else    //if a custom map has been loaded
         {
-            quit();
+            map = FileManager.loadMap(mapFilePath, true);   //re-generate the map
+            options();                                      //display options again
         }
     }
 
@@ -213,7 +226,7 @@ public class Menu {
         System.out.println("Please enter the file path of the map you would "
                 + "like to load:\n");
         String path = scanner.nextLine();   //get the filepath
-        map = FileManager.loadMap(path);    //set the map
+        map = FileManager.loadMap(path, false);    //set the map
         stillDefault = false;               //the map is no longer the default map
         options();                          //display main menu
     }
