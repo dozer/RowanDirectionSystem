@@ -44,4 +44,11 @@ public class Edge {
     {
         return this.weight;
     }
+
+    public String toString()
+    {
+        String s = "" + this.target + " " + this.weight;
+        return s;
+    }
+
 }

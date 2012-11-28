@@ -15,7 +15,7 @@ public class Driver {
         Menu RDS = new Menu(generateDefaultMap());
     }
 
-    private static HashMap<String, Building> generateDefaultMap()
+    public static HashMap<String, Building> generateDefaultMap()
     {
         HashMap<String, Building> map = new HashMap<String, Building>();
 

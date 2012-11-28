@@ -125,6 +125,12 @@ public class Dijkstras {
      * @param buildings The current_loc -> destination route to print
      */
     public static void printRoute(List<Building> buildings) {
+        System.out.println(buildings);
+        if (buildings.get(0).getMinDistance() == Double.POSITIVE_INFINITY)
+        {
+            System.out.println("Sorry no route");
+            return;
+        }
         double difference = 0;  //the difference between this edge and the previous one
         double total_distance = 0;  //the total length (in feet) of the route
         String routeInfo = "\nTo get to " + buildings.get(buildings.size()-1) +
@@ -142,13 +148,17 @@ public class Dijkstras {
         //In order to print the route in easy to read english we must chop off
         //the last instance of " Then go " which was spawned while looping through
         //all of the buildings along the path earlier.
+//        if (routeInfo.contains(". \nThen go ")){
         routeInfo = routeInfo.substring(0, routeInfo.lastIndexOf(". \nThen go "));
+//        }
         routeInfo += ". \nYou will now arrive at your destination."
                 + "\nThis trip is a total of " + total_distance
                 + " feet and will take you approximately "
                 + truncateDouble(total_distance / AVG_WALKSPEED, 2) //calculate time
                 + " minutes to walk.";
         System.out.println(routeInfo);  //display result
+        routeInfo = null;
+        buildings = null;
     }
 
     /**

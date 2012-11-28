@@ -18,6 +18,7 @@ import java.util.Scanner;
  */
 public class Menu {
 
+    private static boolean stillDefault = true;
     private static HashMap map = null;  //the current map (Rowan is default)
     private static int command = -1;    //the current command (-1 is default)
     private static Scanner scanner = new Scanner(System.in);    //The command reader
@@ -62,31 +63,31 @@ public class Menu {
         System.out.println("\t4. Help");
         System.out.println("\t5. Quit\n");
         try {
-            //A string switch statement would work as well, but only with JDK7 and up.
-            //Due to this, I am using an int switch for compatibility.
-            command = Integer.parseInt(scanner.nextLine()); //get choice
-            switch (command) {
-                case 1:
-                    getDirections();
-                    break;
-                case 2:
-                    viewMap(false); //false flag shows we are not in a method
-                    break;
-                case 3:
-                    loadMap();
-                    break;
-                case 4:
-                    help();
-                    break;
-                case 5:
-                    quit();
-                    break;
-                default:
-                    System.out.println(command + " is not a recognized command. "
-                            + "Please try again.");
-                    options();
-                    break;
-            }
+        //A string switch statement would work as well, but only with JDK7 and up.
+        //Due to this, I am using an int switch for compatibility.
+        command = Integer.parseInt(scanner.nextLine()); //get choice
+        switch (command) {
+            case 1:
+                getDirections();
+                break;
+            case 2:
+                viewMap(false); //false flag shows we are not in a method
+                break;
+            case 3:
+                loadMap();
+                break;
+            case 4:
+                help();
+                break;
+            case 5:
+                quit();
+                break;
+            default:
+                System.out.println(command + " is not a recognized command. "
+                        + "Please try again.");
+                options();
+                break;
+        }
         } catch (Exception e) { //user entered a non-int datatype
             System.out.println("Command not recognized.\nInput must be "
                     + "a number between 1 and 5. Please try again.");
@@ -103,14 +104,13 @@ public class Menu {
         boolean found = false;  //way to differentiate between existing/non-existing initial buildings
         Iterator it = map.entrySet().iterator();
         System.out.println("Where are you currently located?");
-        //toLowerCase() for ease of use
-        String loc = scanner.nextLine().toLowerCase();  //get current location
+        String loc = scanner.nextLine();  //get current location
         //Get current location and complete map if it exists
         while (it.hasNext()) {
             Map.Entry entry = (Map.Entry) it.next();
             Building b = (Building) entry.getValue();
-            //toLowerCase for ease of use (corresponds with getting loc above)
-            if (b.toString().toLowerCase().equals(loc)) {
+            //toLowerCase for ease of use
+            if (b.toString().toLowerCase().equals(loc.toLowerCase())) {
                 Dijkstras.computeRoutes(b); //calculate routes
                 found = true;   //building exists
             }
@@ -122,23 +122,23 @@ public class Menu {
                     + "If you would like to return to the main menu, press '3'.\n");
             //Again we need a try/catch block to ensure user enters an integer
             try {
-                loc = scanner.nextLine();   //get user's new choice
-                switch (Integer.parseInt(loc)) {
-                    case 1:
-                        getDirections();
-                        break;
-                    case 2:
-                        viewMap(true);  //true parameter indicates we are calling from inside a method
-                        getDirections();
-                        break;
-                    case 3:
-                        options();
-                        break;
-                    default:
-                        System.out.println("Sorry " + loc + "is not a recognized command."
-                                + " Please try again.");
-                        break;
-                }
+            loc = scanner.nextLine();   //get user's new choice
+            switch (Integer.parseInt(loc)) {
+                case 1:
+                    getDirections();
+                    break;
+                case 2:
+                    viewMap(true);  //true parameter indicates we are calling from inside a method
+                    getDirections();
+                    break;
+                case 3:
+                    options();
+                    break;
+                default:
+                    System.out.println("Sorry " + loc + "is not a recognized command."
+                            + " Please try again.");
+                    break;
+            }
             } catch (Exception e) { //user entered a non-int datatype
                 System.out.println("Command not recognized.\nInput must be "
                         + "a number between 1 and 3. Returning to main menu.");
@@ -149,14 +149,13 @@ public class Menu {
 
         it = map.entrySet().iterator(); //reset the iterator
         System.out.println("What is your desired location?");
-        //toLowerCase() for ease of use
-        loc = scanner.nextLine().toLowerCase();
+        loc = scanner.nextLine();
         //Get desired location and print shortest path if it exists
         while (it.hasNext()) {
             Map.Entry entry = (Map.Entry) it.next();    //get next entry from map
             Building b = (Building) entry.getValue();   //get building (value) from entry
             //toLowerCase for ease of use (corresponds with getting loc above)
-            if (b.toString().toLowerCase().equals(loc)) {
+            if (b.toString().toLowerCase().equals(loc.toLowerCase())) {
                 //at this stage, both buildings are known, find the route
                 Dijkstras.printRoute(Dijkstras.getShortestRouteTo(b));
                 found = true;   //building exists
@@ -167,8 +166,19 @@ public class Menu {
                     + " Please try again.");
         }
         found = false;  //Reset found to false to ensure it works in a persistant environment
-
-        options();  //re-display initial menu
+        
+        //if the map is still default we can recreate it, eliminating the found paths
+        //and enabling us to get more directions
+        if (stillDefault)
+        {
+            map = Driver.generateDefaultMap();  //re-generate the map
+            options();                          //display options again
+        }
+        //otherwise we cannot recreate the map and must exit
+        else
+        {
+            quit();
+        }
     }
 
     /**
@@ -204,6 +214,7 @@ public class Menu {
                 + "like to load:\n");
         String path = scanner.nextLine();   //get the filepath
         map = FileManager.loadMap(path);    //set the map
+        stillDefault = false;               //the map is no longer the default map
         options();                          //display main menu
     }
 
